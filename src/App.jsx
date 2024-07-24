@@ -9,7 +9,10 @@ function App() {
   return (
     <>
       <NavHeader />
-      <main></main>
+      <main className=" grid grid-cols-3 h-svh">
+        <section className="sidebar-container col-span-1"></section>
+        <section className="room-container col-span-2"></section>
+      </main>
     </>
   );
 }
