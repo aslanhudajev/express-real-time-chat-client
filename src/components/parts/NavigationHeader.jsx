@@ -12,20 +12,15 @@ import { cn } from "@/lib/utils";
 
 import { Link } from "react-router-dom";
 
-const Header = () => {
+const NavHeader = () => {
   return (
     <nav className="w-full p-4 shadow-sm sticky top-0 z-50 bg-white">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
             <h2 className="logo scroll-m-20 text-3xl font-semibold tracking-tight mr-4">
-              Marble
+              Litecord
             </h2>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link to="/" className={navigationMenuTriggerStyle()}>
-              Blog
-            </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuTrigger>Socials</NavigationMenuTrigger>
@@ -63,7 +58,7 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default NavHeader;
 
 const ListItem = ({ to, title, children, className, ...props }) => {
   return (

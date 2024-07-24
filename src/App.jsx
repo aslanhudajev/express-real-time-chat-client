@@ -1,9 +1,17 @@
 import { useState } from "react";
-import "./App.css";
+import { Outlet } from "react-router-dom";
 import socket from "./socket";
 
+//parts
+import NavHeader from "./components/parts/NavigationHeader";
+
 function App() {
-  return <main></main>;
+  return (
+    <>
+      <NavHeader />
+      <main></main>
+    </>
+  );
 }
 
 export default App;
