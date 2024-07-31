@@ -17,10 +17,17 @@ function App() {
       <NavHeader />
       <main className=" grid grid-cols-6 h-[calc(100vh-72px)]">
         <section className="sidebar-container bg-gray-100 p-4 col-span-1">
-          <Sidebar setChatIsOpen={setChatIsOpen} />
+          <Sidebar
+            setChatIsOpen={setChatIsOpen}
+            setCurrentFriendUsername={setCurrentFriendUsername}
+          />
         </section>
         <section className="room-container col-span-5 p-4">
-          {chatIsOpen === true ? <Chat chatIsOpen={chatIsOpen} /> : <></>}
+          {chatIsOpen === true ? (
+            <Chat currentFriendUsername={currentFriendUsername} />
+          ) : (
+            <></>
+          )}
         </section>
       </main>
     </>

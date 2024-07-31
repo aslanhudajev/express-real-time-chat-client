@@ -1,17 +1,25 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "../ui/button";
 import { CirclePlus } from "lucide-react";
 
-const friends = [
-  { username: "Jason", _id: 1 },
-  { username: "Tyler", _id: 2 },
-  { username: "Marian", _id: 3 },
-];
+const user = { username: "admin", _id: "66aaaade75a3e1daa7f9c49c" };
 
-function Sidebar({ setChatIsOpen }) {
-  async function handleOpenRoom() {
+function Sidebar({ setChatIsOpen, setCurrentFriendUsername }) {
+  function handleOpenRoom(e) {
+    e.stopPropagation();
+    setCurrentFriendUsername(e.currentTarget.dataset.username);
     setChatIsOpen(true);
   }
+
+  const friends = useQuery({
+    queryKey: ["friends"],
+    queryFn: async () => {
+      const result = await fetch(`${import.meta.env.VITE_SERVER_URL}/friends`);
+      return result.json();
+    },
+  });
 
   return (
     <div className="sidebar h-full">
@@ -25,7 +33,7 @@ function Sidebar({ setChatIsOpen }) {
         />
       </div>
       <div className="friends flex flex-col gap-3">
-        {friends.map((friend) => (
+        {rooms.map((friend) => (
           <Friend
             username={friend.username}
             key={friend._id}
@@ -42,6 +50,7 @@ function Friend({ username, handleOpenRoom }) {
     <div
       onClick={handleOpenRoom}
       className="sidebar-friend space-y-1 flex flex-row items-center gap-2 cursor-pointer"
+      data-username={username}
     >
       <Avatar>
         <AvatarImage src="https://github.com/shadcn.png" />
