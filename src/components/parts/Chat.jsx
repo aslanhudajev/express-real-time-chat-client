@@ -7,7 +7,7 @@ import ChatBox from "./ChatBox";
 function Chat({ roomId, messagesData }) {
   const user = { username: "admin", _id: "66aaaade75a3e1daa7f9c49c" };
 
-  const { messages, sendMessage } = useChat(roomId, messagesData);
+  const { sendMessage } = useChat(roomId, messagesData);
   const [newMessage, setNewMessage] = useState("");
 
   const handleNewMessageWrite = (event) => {
@@ -22,8 +22,8 @@ function Chat({ roomId, messagesData }) {
   return (
     <div className="chat flex flex-col items-center h-full">
       <div className="messages h-full w-full">
-        {messages
-          ? messages.map((message) => {
+        {messagesData
+          ? messagesData.map((message) => {
               if (message.user === user._id) {
                 return (
                   <Message

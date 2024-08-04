@@ -5,7 +5,6 @@ import { useState } from "react";
 
 function Room() {
   const params = useParams();
-
   const { isPending, error, data } = useQuery({
     queryKey: ["chat messages", params],
     queryFn: async () => {

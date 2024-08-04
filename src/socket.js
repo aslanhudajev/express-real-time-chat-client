@@ -8,7 +8,7 @@ const user = { username: "admin", _id: "66aaaade75a3e1daa7f9c49c" };
 
 export default function useChat(roomId, persistedMessages) {
   const id = useRef(uuid());
-  const messages = [...persistedMessages];
+  const messages = persistedMessages;
   const ioRef = useRef(null);
 
   useEffect(() => {
