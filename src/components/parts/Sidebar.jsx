@@ -2,14 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CirclePlus } from "lucide-react";
+import { Link } from "react-router-dom";
 
-function Sidebar({ setChatIsOpen, setCurrentFriendUsername }) {
-  function handleOpenRoom(e) {
-    e.stopPropagation();
-    setCurrentFriendUsername(e.currentTarget.dataset.username);
-    setChatIsOpen(true);
-  }
-
+function Sidebar({ ...props }) {
   const { isPending, error, data } = useQuery({
     queryKey: ["friends"],
     queryFn: async () => {
@@ -30,15 +25,16 @@ function Sidebar({ setChatIsOpen, setCurrentFriendUsername }) {
           className="cursor-pointer"
           size={20}
           strokeWidth={2.5}
+          //! ADD A ADD FRIEND FUNCTION
           onClick={() => alert("Hi")}
         />
       </div>
       <div className="friends flex flex-col gap-3">
-        {data.map((friend) => (
+        {data.map((room) => (
           <Friend
-            username={friend.username}
-            key={friend._id}
-            handleOpenRoom={handleOpenRoom}
+            username={room.members[1].username}
+            roomId={room._id}
+            key={room._id}
           />
         ))}
       </div>
@@ -46,19 +42,20 @@ function Sidebar({ setChatIsOpen, setCurrentFriendUsername }) {
   );
 }
 
-function Friend({ username, handleOpenRoom }) {
+function Friend({ roomId, username }) {
   return (
-    <div
-      onClick={handleOpenRoom}
-      className="sidebar-friend space-y-1 flex flex-row items-center gap-2 cursor-pointer"
-      data-username={username}
-    >
-      <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>PR</AvatarFallback>
-      </Avatar>
-      <p className="text-md font-medium leading-none">{username}</p>
-    </div>
+    <Link to={`/room/${roomId}`}>
+      <div
+        className="sidebar-friend space-y-1 flex flex-row items-center gap-2 cursor-pointer"
+        data-username={username}
+      >
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>PR</AvatarFallback>
+        </Avatar>
+        <p className="text-md font-medium leading-none">{username}</p>
+      </div>
+    </Link>
   );
 }
 
