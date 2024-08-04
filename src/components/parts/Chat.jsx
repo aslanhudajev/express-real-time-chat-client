@@ -1,22 +1,26 @@
-import { io } from "socket.io-client";
-import { useState, useEffect, useRef } from "react";
-
 import ChatBox from "./ChatBox";
+import { io } from "socket.io-client";
+import { userContext } from "@/Contexts";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function Chat({ roomId, messagesData }) {
-  const EVENT_NEW_MSG = "NEW_MSG";
-  const user = { username: "admin", _id: "66aaaade75a3e1daa7f9c49c" };
-
   const ioRef = useRef(null);
-
+  const messagesEndRef = useRef(null);
+  const user = useContext(userContext);
   const [messages, setMessages] = useState();
   const [room, setRoom] = useState();
   const [newMessage, setNewMessage] = useState("");
 
+  const scrollToBottom = () => {
+    console.log("scrolling");
+    messagesEndRef.current?.scrollIntoView(false);
+  };
+
   useEffect(() => {
     setMessages([...messagesData]);
     setRoom(roomId);
+    scrollToBottom();
   }, [messagesData]);
 
   useEffect(() => {
@@ -26,6 +30,7 @@ function Chat({ roomId, messagesData }) {
 
     ioRef.current.on(import.meta.env.VITE_SOCKET_EVENT_NEW_MSG, (message) => {
       setMessages((oldMessages) => [...oldMessages, message]);
+      scrollToBottom();
     });
 
     return () => {
@@ -46,14 +51,15 @@ function Chat({ roomId, messagesData }) {
     setNewMessage(event.target.value);
   };
 
-  const handleNewMessageSend = () => {
+  const handleNewMessageSend = (event) => {
+    event.preventDefault();
     sendMessage(newMessage);
     setNewMessage("");
   };
 
   return (
     <div className="chat flex flex-col items-center h-full">
-      <div className="messages h-full w-full">
+      <div className="messages p-3 pb-0 gap-3 flex flex-col grow-0 items-start w-full h-full max-h-[calc(100vh-72px-72px)] overflow-y-scroll scroll-mx-4">
         {messages
           ? messages.map((message) => {
               if (message.user === user._id) {
@@ -75,6 +81,7 @@ function Chat({ roomId, messagesData }) {
               }
             })
           : "Loading..."}
+        <div className="p-2 w-full" ref={messagesEndRef}></div>
       </div>
       <ChatBox
         newMessage={newMessage}

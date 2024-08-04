@@ -1,15 +1,35 @@
-import { useQuery } from "@tanstack/react-query";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CirclePlus } from "lucide-react";
+import { useContext } from "react";
+import { userContext } from "@/Contexts";
 import { Link } from "react-router-dom";
+import { CirclePlus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import axios from "axios";
 
-function Sidebar({ ...props }) {
+function Sidebar() {
+  const user = useContext(userContext);
+  console.log(user);
+
+  const navigate = useNavigate();
+
   const { isPending, error, data } = useQuery({
     queryKey: ["friends"],
     queryFn: async () => {
-      const result = await fetch(`${import.meta.env.VITE_SERVER_URL}/rooms`);
-      return result.json();
+      try {
+        const result = await axios.get(
+          `${import.meta.env.VITE_SERVER_URL}/rooms`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        );
+        return result.data;
+      } catch (error) {
+        navigate("/login");
+        console.log(error);
+      }
     },
   });
 

@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import Chat from "../parts/Chat";
-import { useState } from "react";
+import axios from "axios";
 
 function Room() {
   const params = useParams();
@@ -9,12 +9,20 @@ function Room() {
   const { isPending, error, data } = useQuery({
     queryKey: ["chat messages", params.roomId],
     queryFn: async () => {
-      const result = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/room/${params.roomId}`
-      );
-      const d = await result.json();
-      console.log("test " + params.roomId + d[0].content);
-      return d;
+      try {
+        const result = await axios.get(
+          `${import.meta.env.VITE_SERVER_URL}/room/${params.roomId}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        );
+        return result.data;
+      } catch (error) {
+        navigate("/login");
+        console.log(error);
+      }
     },
   });
 
