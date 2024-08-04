@@ -1,14 +1,46 @@
-import { useState, useEffect } from "react";
-import useChat from "@/socket";
+import { io } from "socket.io-client";
+import { useState, useEffect, useRef } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ChatBox from "./ChatBox";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function Chat({ roomId, messagesData }) {
+  const EVENT_NEW_MSG = "NEW_MSG";
   const user = { username: "admin", _id: "66aaaade75a3e1daa7f9c49c" };
 
-  const { sendMessage } = useChat(roomId, messagesData);
+  const ioRef = useRef(null);
+
+  const [messages, setMessages] = useState();
+  const [room, setRoom] = useState();
   const [newMessage, setNewMessage] = useState("");
+
+  useEffect(() => {
+    setMessages([...messagesData]);
+    setRoom(roomId);
+  }, [messagesData]);
+
+  useEffect(() => {
+    ioRef.current = io(import.meta.env.VITE_SOCKET_SERVER_URL, {
+      query: { roomId },
+    });
+
+    ioRef.current.on(import.meta.env.VITE_SOCKET_EVENT_NEW_MSG, (message) => {
+      setMessages((oldMessages) => [...oldMessages, message]);
+    });
+
+    return () => {
+      ioRef.current.disconnect();
+    };
+  }, [messagesData]);
+
+  const sendMessage = (content) => {
+    ioRef.current.emit(import.meta.env.VITE_SOCKET_EVENT_NEW_MSG, {
+      user: user._id,
+      content: content,
+      room: room,
+      date: new Date(),
+    });
+  };
 
   const handleNewMessageWrite = (event) => {
     setNewMessage(event.target.value);
@@ -22,8 +54,8 @@ function Chat({ roomId, messagesData }) {
   return (
     <div className="chat flex flex-col items-center h-full">
       <div className="messages h-full w-full">
-        {messagesData
-          ? messagesData.map((message) => {
+        {messages
+          ? messages.map((message) => {
               if (message.user === user._id) {
                 return (
                   <Message

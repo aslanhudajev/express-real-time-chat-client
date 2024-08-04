@@ -6,20 +6,21 @@ const URL = "http://localhost:3000";
 const EVENT_NEW_MSG = "NEW_MSG";
 const user = { username: "admin", _id: "66aaaade75a3e1daa7f9c49c" };
 
-export default function useChat(roomId, persistedMessages) {
+export default function useChat(roomId, messages, setMessages) {
   const id = useRef(uuid());
-  const messages = persistedMessages;
   const ioRef = useRef(null);
 
   useEffect(() => {
     console.log(id.current);
     console.log(messages);
+    console.log(setMessages);
+
     ioRef.current = io(URL, {
       query: { roomId },
     });
 
     ioRef.current.on(EVENT_NEW_MSG, (message) => {
-      messages.push(message);
+      setMessages([...messages, message]);
       console.log(messages);
     });
 

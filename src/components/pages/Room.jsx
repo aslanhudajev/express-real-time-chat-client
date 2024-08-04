@@ -5,13 +5,16 @@ import { useState } from "react";
 
 function Room() {
   const params = useParams();
+
   const { isPending, error, data } = useQuery({
-    queryKey: ["chat messages", params],
+    queryKey: ["chat messages", params.roomId],
     queryFn: async () => {
       const result = await fetch(
         `${import.meta.env.VITE_SERVER_URL}/room/${params.roomId}`
       );
-      return result.json();
+      const d = await result.json();
+      console.log("test " + params.roomId + d[0].content);
+      return d;
     },
   });
 
