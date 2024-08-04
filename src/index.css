@@ -107,3 +107,7 @@ th {
 code {
   @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
 }
+
+.AvatarFallback {
+  @apply w-full h-full flex items-center justify-center bg-neutral-800 text-emerald-300 text-sm;
+}

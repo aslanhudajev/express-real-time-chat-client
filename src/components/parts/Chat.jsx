@@ -62,23 +62,14 @@ function Chat({ roomId, messagesData }) {
       <div className="messages p-3 pb-0 gap-3 flex flex-col grow-0 items-start w-full h-full max-h-[calc(100vh-72px-72px)] overflow-y-scroll scroll-mx-4">
         {messages
           ? messages.map((message) => {
-              if (message.user === user._id) {
-                return (
-                  <Message
-                    content={message.content}
-                    friend={false}
-                    key={message._id}
-                  />
-                );
-              } else {
-                return (
-                  <Message
-                    content={message.content}
-                    friend={true}
-                    key={message._id}
-                  />
-                );
-              }
+              return (
+                <Message
+                  content={message.content}
+                  sender={message.user}
+                  user={user}
+                  key={message._id}
+                />
+              );
             })
           : "Loading..."}
         <div className="p-2 w-full" ref={messagesEndRef}></div>
@@ -93,16 +84,19 @@ function Chat({ roomId, messagesData }) {
 }
 export default Chat;
 
-function Message({ content, friend }) {
-  if (friend === false) {
+function Message({ content, sender, user }) {
+  if (user._id === sender._id) {
     return (
       <div className="flex w-full justify-end">
         <div className="flex gap-3 items-center">
           <span className="bg-accent p-3 rounded-md max-w-xs">{content}</span>
           <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full flex justify-center items-center">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>PR</AvatarFallback>
+              <AvatarImage src="" />
+              <AvatarFallback className="AvatarFallback">
+                {sender.username.toUpperCase()[0] +
+                  sender.username.toUpperCase()[1]}
+              </AvatarFallback>
             </Avatar>
           </span>
         </div>
@@ -114,8 +108,11 @@ function Message({ content, friend }) {
         <div className="flex gap-3 items-center">
           <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full flex justify-center items-center">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>PR</AvatarFallback>
+              <AvatarImage src="" />
+              <AvatarFallback className="AvatarFallback">
+                {sender.username.toUpperCase()[0] +
+                  sender.username.toUpperCase()[1]}
+              </AvatarFallback>
             </Avatar>
           </span>
           <span className="bg-accent p-3 rounded-md max-w-xs">{content}</span>

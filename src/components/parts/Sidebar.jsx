@@ -9,7 +9,6 @@ import axios from "axios";
 
 function Sidebar() {
   const user = useContext(userContext);
-  console.log(user);
 
   const navigate = useNavigate();
 
@@ -52,7 +51,11 @@ function Sidebar() {
       <div className="friends flex flex-col gap-3">
         {data.map((room) => (
           <Friend
-            username={room.members[1].username}
+            username={
+              room.members[0].username === user.username
+                ? room.members[1].username
+                : room.members[0].username
+            }
             roomId={room._id}
             key={room._id}
           />
@@ -70,8 +73,10 @@ function Friend({ roomId, username }) {
         data-username={username}
       >
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>PR</AvatarFallback>
+          <AvatarImage src="" />
+          <AvatarFallback className="AvatarFallback">
+            {username.toUpperCase()[0] + username.toUpperCase()[1]}
+          </AvatarFallback>
         </Avatar>
         <p className="text-md font-medium leading-none">{username}</p>
       </div>

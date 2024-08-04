@@ -8,13 +8,12 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
-
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 const NavHeader = () => {
   return (
-    <nav className="w-full p-4 shadow-sm sticky top-0 z-50 bg-white">
+    <nav className="w-full p-4 shadow-sm sticky top-0 z-50 bg-white flex flex-row items-center justify-between">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
@@ -50,6 +49,15 @@ const NavHeader = () => {
           <NavigationMenuItem>
             <Link to="/aboutme" className={navigationMenuTriggerStyle()}>
               About
+            </Link>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <Link to="/logout" className={navigationMenuTriggerStyle()}>
+              Logout
             </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
