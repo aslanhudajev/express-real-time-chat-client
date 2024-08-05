@@ -29,6 +29,7 @@ function Chat({ roomId, messagesData }) {
     });
 
     ioRef.current.on(import.meta.env.VITE_SOCKET_EVENT_NEW_MSG, (message) => {
+      console.log(message);
       setMessages((oldMessages) => [...oldMessages, message]);
       scrollToBottom();
     });
@@ -53,8 +54,10 @@ function Chat({ roomId, messagesData }) {
 
   const handleNewMessageSend = (event) => {
     event.preventDefault();
-    sendMessage(newMessage);
-    setNewMessage("");
+    if (newMessage !== "") {
+      sendMessage(newMessage);
+      setNewMessage("");
+    }
   };
 
   return (
@@ -94,8 +97,8 @@ function Message({ content, sender, user }) {
             <Avatar>
               <AvatarImage src="" />
               <AvatarFallback className="AvatarFallback">
-                {sender.username.toUpperCase()[0] +
-                  sender.username.toUpperCase()[1]}
+                {user.username.toUpperCase()[0] +
+                  user.username.toUpperCase()[1]}
               </AvatarFallback>
             </Avatar>
           </span>

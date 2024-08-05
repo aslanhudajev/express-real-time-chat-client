@@ -4,10 +4,6 @@ import { useNavigate, Link } from "react-router-dom";
 const Logout = () => {
   const navigate = useNavigate();
 
-  const handleGoBack = () => {
-    window.location.href("/");
-  };
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -19,7 +15,7 @@ const Logout = () => {
         Are you sure you want to log out?
       </h1>
       <div className="flex flex-row gap-4">
-        <Link to={"/"} reloadDocument={true}>
+        <Link to={"/"}>
           <Button>Go back</Button>
         </Link>
         <Button onClick={handleLogout} variant="secondary">

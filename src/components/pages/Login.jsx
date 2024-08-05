@@ -41,7 +41,7 @@ const Login = () => {
       localStorage.setItem("token", payload.data.token);
       navigate("/");
     } catch (error) {
-      setLoginError(error);
+      setLoginError(error.response.data.message);
       console.log(error);
     }
   };
