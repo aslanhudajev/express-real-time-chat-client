@@ -10,6 +10,7 @@ import Index from "./components/pages/Index";
 import Room from "./components/pages/Room";
 import Login from "./components/pages/Login.jsx";
 import Logout from "./components/pages/Logout.jsx";
+import Register from "./components/pages/Register.jsx";
 import Error from "./components/pages/Error.jsx";
 
 const client = new QueryClient();
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "/logout",
     element: <Logout />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
 ]);
 

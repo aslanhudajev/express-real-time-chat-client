@@ -1,14 +1,18 @@
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const Login = () => {
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+
+const Register = () => {
   const navigate = useNavigate();
-  const [loginData, setLoginData] = useState({ username: "", password: "" });
-  const [loginError, setLoginError] = useState([]);
+  const [registerData, setRegisterData] = useState({
+    username: "",
+    password: "",
+    "password-confirm": "",
+  });
+  const [registerError, setRegisterError] = useState([]);
 
   useEffect(() => {
     const authenticate = async () => {
@@ -24,7 +28,7 @@ const Login = () => {
         navigate("/");
       } catch (error) {
         console.log(error);
-        navigate("/login");
+        navigate("/register");
       }
     };
 
@@ -34,14 +38,14 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const payload = await axios.post(
-        `${import.meta.env.VITE_SERVER_AUTH_URL}/login`,
-        loginData
+      const result = await axios.post(
+        `${import.meta.env.VITE_SERVER_AUTH_URL}/register`,
+        registerData
       );
-      localStorage.setItem("token", payload.data.token);
-      navigate("/");
+      console.log(result.data);
+      navigate("/login");
     } catch (error) {
-      setLoginError(error.response.data.message);
+      setRegisterError(error.response.data.message);
       console.log(error);
     }
   };
@@ -49,7 +53,7 @@ const Login = () => {
   return (
     <div className="login flex flex-col items-center justify-center h-lvh">
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl pb-8">
-        Log in
+        Register
       </h1>
       <form
         onSubmit={handleSubmit}
@@ -61,7 +65,7 @@ const Login = () => {
           id="username"
           placeholder="Username"
           onChange={(e) =>
-            setLoginData({ ...loginData, username: e.target.value })
+            setRegisterData({ ...registerData, username: e.target.value })
           }
         />
         <Input
@@ -70,26 +74,30 @@ const Login = () => {
           id="password"
           placeholder="Password"
           onChange={(e) =>
-            setLoginData({ ...loginData, password: e.target.value })
+            setRegisterData({ ...registerData, password: e.target.value })
           }
         />
-        <Button>Log in</Button>
-        {loginError ? (
-          <span className=" text-red-600">{loginError}</span>
+        <Input
+          name="password-confirm"
+          type="password"
+          id="password-confirm"
+          placeholder="Confirm password"
+          onChange={(e) =>
+            setRegisterData({
+              ...registerData,
+              "password-register": e.target.value,
+            })
+          }
+        />
+        <Button>Register</Button>
+        {registerError ? (
+          <span className=" text-red-600">{registerError}</span>
         ) : (
           <></>
         )}
       </form>
-      <div>
-        <span>
-          Don't have an account?{" "}
-          <Link className="underline" to={"/register"}>
-            Register here.
-          </Link>
-        </span>
-      </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;
