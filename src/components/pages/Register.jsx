@@ -1,16 +1,20 @@
-import { useState, useEffect } from "react";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
-import { Input } from "../ui/input";
+import { Label } from "@radix-ui/react-label";
+import { useState, useEffect } from "react";
+import { AlertCircle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Terminal } from "lucide-react";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import axios from "axios";
 
 const Register = () => {
   const navigate = useNavigate();
   const [registerData, setRegisterData] = useState({
     username: "",
     password: "",
-    "password-confirm": "",
+    passwordConfirm: "",
   });
   const [registerError, setRegisterError] = useState([]);
 
@@ -45,13 +49,13 @@ const Register = () => {
       console.log(result.data);
       navigate("/login");
     } catch (error) {
-      setRegisterError(error.response.data.message);
+      setRegisterError(error.response.data.errors);
       console.log(error);
     }
   };
 
   return (
-    <div className="login flex flex-col items-center justify-center h-lvh">
+    <div className="register flex flex-col items-center justify-center h-lvh">
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl pb-8">
         Register
       </h1>
@@ -59,6 +63,7 @@ const Register = () => {
         onSubmit={handleSubmit}
         className="form-field grid w-full max-w-sm items-center gap-1.5"
       >
+        <Label htmlFor="username">Username</Label>
         <Input
           name="username"
           type="text"
@@ -67,7 +72,9 @@ const Register = () => {
           onChange={(e) =>
             setRegisterData({ ...registerData, username: e.target.value })
           }
+          required
         />
+        <Label htmlFor="password">Password</Label>
         <Input
           name="password"
           type="password"
@@ -76,26 +83,57 @@ const Register = () => {
           onChange={(e) =>
             setRegisterData({ ...registerData, password: e.target.value })
           }
+          required
         />
+        <Label htmlFor="passwordConfirm">Confirm password</Label>
         <Input
-          name="password-confirm"
+          name="passwordConfirm"
           type="password"
-          id="password-confirm"
+          id="passwordConfirm"
           placeholder="Confirm password"
           onChange={(e) =>
             setRegisterData({
               ...registerData,
-              "password-register": e.target.value,
+              passwordConfirm: e.target.value,
             })
           }
+          required
         />
-        <Button>Register</Button>
-        {registerError ? (
-          <span className=" text-red-600">{registerError}</span>
-        ) : (
-          <></>
-        )}
+        <Button className="mt-4" type="submit">
+          Register
+        </Button>
+        <span className="text-center">
+          Already have an account?&nbsp;
+          <Link className="underline" to={"/login"}>
+            Log in here
+          </Link>
+        </span>
+        <Alert className="mt-4">
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Password requirements</AlertTitle>
+          <AlertDescription>
+            <ul>
+              <li>- At least 8 characters long</li>
+              <li>- At least 1 number</li>
+              <li>- At least 1 uppercase character</li>
+            </ul>
+          </AlertDescription>
+        </Alert>
       </form>
+
+      {registerError ? (
+        <div className="flex flex-col items-center text-sm mt-4 gap-4">
+          {registerError.map((error) => (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>{`Error ${error.path}`}</AlertTitle>
+              <AlertDescription>{error.msg}</AlertDescription>
+            </Alert>
+          ))}
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

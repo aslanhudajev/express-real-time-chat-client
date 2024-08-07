@@ -12,6 +12,7 @@ import Login from "./components/pages/Login.jsx";
 import Logout from "./components/pages/Logout.jsx";
 import Register from "./components/pages/Register.jsx";
 import Error from "./components/pages/Error.jsx";
+import Requests from "./components/pages/Requests.jsx";
 
 const client = new QueryClient();
 
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "/room/:roomId",
         element: <Room />,
+      },
+      {
+        path: "/requests",
+        element: <Requests />,
       },
     ],
   },

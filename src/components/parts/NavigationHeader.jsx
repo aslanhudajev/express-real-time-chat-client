@@ -22,6 +22,11 @@ const NavHeader = () => {
             </h2>
           </NavigationMenuItem>
           <NavigationMenuItem>
+            <Link to="/requests" className={navigationMenuTriggerStyle()}>
+              Requests
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
             <NavigationMenuTrigger>Socials</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[350px] gap-3 p-4">

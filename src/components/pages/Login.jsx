@@ -1,14 +1,18 @@
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { useNavigate } from "react-router-dom";
+import { Label } from "@radix-ui/react-label";
 import { useState, useEffect } from "react";
+import { AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+
 import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({ username: "", password: "" });
-  const [loginError, setLoginError] = useState([]);
+  const [loginError, setLoginError] = useState();
 
   useEffect(() => {
     const authenticate = async () => {
@@ -55,6 +59,7 @@ const Login = () => {
         onSubmit={handleSubmit}
         className="form-field grid w-full max-w-sm items-center gap-1.5"
       >
+        <Label htmlFor="username">Username</Label>
         <Input
           name="username"
           type="text"
@@ -63,7 +68,9 @@ const Login = () => {
           onChange={(e) =>
             setLoginData({ ...loginData, username: e.target.value })
           }
+          required
         />
+        <Label htmlFor="password">Password</Label>
         <Input
           name="password"
           type="password"
@@ -72,22 +79,30 @@ const Login = () => {
           onChange={(e) =>
             setLoginData({ ...loginData, password: e.target.value })
           }
+          required
         />
-        <Button>Log in</Button>
+        <Button className="mt-4" type="submit">
+          Log in
+        </Button>
+        <span className="text-center">
+          Don't have an account?&nbsp;
+          <Link className="underline" to={"/register"}>
+            Register here
+          </Link>
+        </span>
+
         {loginError ? (
-          <span className=" text-red-600">{loginError}</span>
+          <div className="flex flex-col items-center text-sm mt-4 gap-4">
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>{"Error"}</AlertTitle>
+              <AlertDescription>{loginError}</AlertDescription>
+            </Alert>
+          </div>
         ) : (
           <></>
         )}
       </form>
-      <div>
-        <span>
-          Don't have an account?{" "}
-          <Link className="underline" to={"/register"}>
-            Register here.
-          </Link>
-        </span>
-      </div>
     </div>
   );
 };
