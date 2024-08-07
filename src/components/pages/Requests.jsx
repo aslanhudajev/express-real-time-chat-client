@@ -35,9 +35,39 @@ function Requests() {
     },
   });
 
-  const handleRequestAccept = () => {};
+  const handleRequestAccept = async (e) => {
+    try {
+      const result = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/request/accept/${
+          e.target.dataset.id
+        }`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const handleRequestDecline = () => {};
+  const handleRequestDecline = async (e) => {
+    try {
+      const result = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/request/decline/${
+          e.target.dataset.id
+        }`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (isPending) return "Loading...";
 
@@ -46,14 +76,19 @@ function Requests() {
   return (
     <div className="w-full requests flex flex-col items-center">
       {data.map((request) => (
-        <Request request={request} key={request._id} />
+        <Request
+          request={request}
+          handleRequestAccept={handleRequestAccept}
+          handleRequestDecline={handleRequestDecline}
+          key={request._id}
+        />
       ))}
     </div>
   );
 }
 export default Requests;
 
-function Request({ request }) {
+function Request({ request, handleRequestAccept, handleRequestDecline }) {
   return (
     <Card>
       <CardHeader>
@@ -65,8 +100,12 @@ function Request({ request }) {
       <CardContent>
         <div className="flex-1 space-y-1">
           <div className="flex flex-col gap-2">
-            <Button onClick={handleRequestAccept}>Accept</Button>
-            <Button onClick={handleRequestDecline}>Decline</Button>
+            <Button data-id={request._id} onClick={handleRequestAccept}>
+              Accept
+            </Button>
+            <Button data-id={request._id} onClick={handleRequestDecline}>
+              Decline
+            </Button>
           </div>
         </div>
       </CardContent>

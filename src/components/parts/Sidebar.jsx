@@ -61,6 +61,8 @@ function Sidebar() {
           },
         }
       );
+
+      setRequestDialogOpen(false);
     } catch (error) {
       setRequestSendErrors(error.response.data.message);
       console.log(error);
@@ -73,7 +75,7 @@ function Sidebar() {
 
   return (
     <div className="sidebar h-full">
-      <div className="sidebar-head mb-6 flex flex-row justify-between items-center">
+      <div className="sidebar-head mb-6 flex md:flex-row md:items-center md:justify-between sm:flex-col sm:items-start sm:justify-center">
         <h3>Friends</h3>
         <Dialog open={requestDialogOpen} onOpenChange={setRequestDialogOpen}>
           <DialogTrigger asChild>
