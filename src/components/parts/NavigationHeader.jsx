@@ -8,10 +8,38 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import axios from "axios";
 
 const NavHeader = () => {
+  const navigate = useNavigate();
+
+  const { isPending, error, data } = useQuery({
+    queryKey: ["requestAmount"],
+    queryFn: async () => {
+      try {
+        const result = await axios.get(
+          `${import.meta.env.VITE_SERVER_URL}/requests/count`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        );
+        console.log(result.data);
+        return result.data;
+      } catch (error) {
+        navigate("/login");
+        console.log(error);
+      }
+    },
+  });
+
+  if (error) return "An error has occurred: " + error.message;
+
   return (
     <nav className="w-full p-4 shadow-sm sticky top-0 z-50 bg-white flex flex-row items-center justify-between">
       <NavigationMenu>
@@ -23,7 +51,7 @@ const NavHeader = () => {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link to="/requests" className={navigationMenuTriggerStyle()}>
-              Requests
+              {data ? `Requests (${data})` : "Requests"}
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>

@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { userContext } from "@/Contexts";
 import { Button } from "../ui/button";
 import { useContext } from "react";
@@ -14,6 +15,7 @@ import axios from "axios";
 
 function Requests() {
   const user = useContext(userContext);
+  const navigate = useNavigate();
 
   const { isPending, error, data } = useQuery({
     queryKey: ["requests"],
@@ -41,12 +43,15 @@ function Requests() {
         `${import.meta.env.VITE_SERVER_URL}/request/accept/${
           e.target.dataset.id
         }`,
+        {},
         {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
         }
       );
+
+      navigate(0);
     } catch (error) {
       console.log(error);
     }
@@ -58,6 +63,7 @@ function Requests() {
         `${import.meta.env.VITE_SERVER_URL}/request/decline/${
           e.target.dataset.id
         }`,
+        {},
         {
           headers: {
             Authorization: localStorage.getItem("token"),
